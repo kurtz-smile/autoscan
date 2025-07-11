@@ -1,0 +1,135 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+.scanner-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.video-container {
+    margin: 0 auto 20px;
+    width: 400px;
+    height: 300px;
+    background-color: #000;
+    position: relative;
+}
+
+video {
+    display: block;
+    margin: 0 auto;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+#resetAll {
+    background-color: #e74c3c;
+}
+
+#resetAll:hover {
+    background-color: #c0392b;
+}
+
+.result-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#scanResult {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.student-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.student-info img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.logs-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#attendanceLogs {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.log-entry {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.status-in {
+    color: #27ae60;
+}
+
+.status-out {
+    color: #e74c3c;
+}
+
+.denied {
+    color: #e74c3c;
+    font-weight: bold;
+}
