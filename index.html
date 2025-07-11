@@ -904,7 +904,7 @@
                 }
                 
                 // Create filename from grade and section
-                const fileName = `grade${studentData.grade}-${studentData.section.toLowerCase()}.json`;
+                const fileName = `k25/grade${studentData.grade}-${studentData.section.toLowerCase()}.json`;
                 
                 // Try to get student data from JSON file
                 const student = await getStudentData(fileName, studentData.lrn);
