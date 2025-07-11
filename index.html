@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Attendance System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>School Attendance System</h1>
+        
+        <div class="scanner-container">
+            <div class="video-container">
+                <video id="scanner" width="400" height="300"></video>
+            </div>
+            <button id="startScanner">Start Scanner</button>
+            <button id="stopScanner" disabled>Stop Scanner</button>
+            <button id="resetAll">Reset All Attendance</button>
+        </div>
+        
+        <div class="result-container">
+            <div id="scanResult">
+                <p>Scan a student QR code to begin</p>
+            </div>
+            <div class="student-info">
+                <img id="studentPhoto" src="" alt="Student Photo" style="display: none;">
+                <div>
+                    <p><strong>Full Name:</strong> <span id="fullName">-</span></p>
+                    <p><strong>Grade:</strong> <span id="grade">-</span></p>
+                    <p><strong>Section:</strong> <span id="section">-</span></p>
+                    <p><strong>LRN:</strong> <span id="lrn">-</span></p>
+                    <p><strong>Phone:</strong> <span id="phone">-</span></p>
+                    <p><strong>Status:</strong> <span id="status">-</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="logs-container">
+            <h2>Attendance Logs</h2>
+            <div id="attendanceLogs"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
