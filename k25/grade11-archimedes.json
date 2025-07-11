@@ -2,7 +2,7 @@
     "students": [
         {
             "fullName": "Nelwyn M. Escodo",
-            "grade": "7",
+            "grade": "11",
             "section": "Archimedes",
             "lrn": "123456789012",
             "phone": "09123456789",
@@ -11,7 +11,7 @@
         },
         {
             "fullName": "Algenren Alunan",
-            "grade": "7",
+            "grade": "11",
             "section": "Archimedes",
             "lrn": "123456789013",
             "phone": "09123456780",
