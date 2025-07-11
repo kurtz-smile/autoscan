@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulakanon High School - Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <style>
+        :root {
+            --primary-pink: #e91e63;
+            --dark-pink: #c2185b;
+            --light-pink: #f8bbd0;
+            --accent-pink: #ff4081;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #757575;
+            --black: #333333;
+            --success: #4CAF50;
+            --error: #f44336;
+            --warning: #FFC107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-pink), var(--primary-pink));
+            color: var(--black);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--dark-pink), var(--primary-pink));
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .school-logo {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            height: 70px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .school-logo i {
+            font-size: 36px;
+            color: var(--primary-pink);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            padding: 0 80px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            padding: 0 80px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            gap: 15px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 900px) {
+            .main-content {
+                flex-direction: row;
+                height: calc(100% - 30px);
+            }
+            
+            .scanner-section {
+                width: 40%;
+                height: 100%;
+            }
+            
+            .result-section {
+                width: 60%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .student-card {
+                height: 40%;
+            }
+            
+            .logs-section {
+                height: 60%;
+            }
+        }
+
+        .scanner-section {
+            background: var(--light-gray);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scanner-container {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+            aspect-ratio: 4/3;
+            flex: 1;
+        }
+
+        #scanner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scanner-frame {
+            width: 80%;
+            height: 60%;
+            border: 4px solid var(--accent-pink);
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 120px;
+            max-width: 200px;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-pink), var(--accent-pink));
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: linear-gradient(to right, #d81b60, #c2185b);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background: linear-gradient(to right, var(--success), #2E7D32);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background: linear-gradient(to right, var(--warning), #FFA000);
+            color: var(--black);
+        }
+
+        .result-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .student-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-top: 4px solid var(--primary-pink);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid var(--primary-pink);
+        }
+
+        .student-photo i {
+            font-size: 42px;
+            color: var(--primary-pink);
+        }
+
+        .student-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .student-info {
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .student-info p {
+            margin: 7px 0;
+            font-size: 1rem;
+        }
+
+        .student-info strong {
+            color: var(--primary-pink);
+            font-weight: 600;
+        }
+
+        .attendance-status {
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 8px;
+            min-width: 140px;
+        }
+
+        .status-in {
+            background: linear-gradient(to right, var(--success), #2E7D32);
+            color: var(--white);
+            animation: pulse 2s infinite;
+        }
+
+        .status-out {
+            background: linear-gradient(to right, var(--error), #d32f2f);
+            color: var(--white);
+        }
+
+        .status-none {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+            border: 2px dashed var(--medium-gray);
+        }
+
+        .logs-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            flex: 1;
+            border-top: 4px solid var(--primary-pink);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-pink);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.5rem;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        #searchLogs {
+            width: 100%;
+            padding: 8px 15px 8px 35px;
+            border-radius: 20px;
+            border: 1px solid var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+
+        .attendance-logs {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .log-entry {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #fff9fc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            border-left: 4px solid var(--primary-pink);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .log-entry:hover {
+            background: #fff0f5;
+            transform: translateX(3px);
+        }
+
+        .log-entry.highlight {
+            background: #fff0f5;
+            border-left: 4px solid var(--accent-pink);
+        }
+
+        .log-entry.highlight-time {
+            background: #fff0f5;
+            border-left: 4px solid var(--warning);
+        }
+
+        .log-time {
+            font-weight: 600;
+            color: var(--primary-pink);
+            font-size: 0.9rem;
+            min-width: 70px;
+        }
+
+        .log-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex: 1;
+            padding: 0 10px;
+            text-align: left;
+        }
+
+        .log-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .scan-result {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .result-success {
+            background: #e8f5e9;
+            color: #2E7D32;
+            border: 2px solid #c8e6c9;
+        }
+
+        .result-error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #ffcdd2;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--dark-pink), var(--primary-pink));
+            color: var(--white);
+            text-align: center;
+            padding: 15px;
+            font-size: 0.85rem;
+        }
+
+        .developers {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dev-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .dev-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .dev-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .dev-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dev-item a {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dev-item i {
+            color: var(--light-pink);
+            font-size: 0.9rem;
+        }
+
+        .scan-cooldown {
+            display: block;
+            margin-top: 8px;
+            font-weight: normal;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(233, 30, 99, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Android specific optimizations */
+        @media (max-width: 600px) {
+            header {
+                padding: 15px 10px;
+            }
+            
+            .school-logo {
+                width: 60px;
+                height: 60px;
+                left: 10px;
+            }
+            
+            .school-logo i {
+                font-size: 32px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                padding: 0 70px;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+                padding: 0 70px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            
+            .student-photo {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .student-info p {
+                font-size: 0.95rem;
+            }
+            
+            .attendance-status {
+                font-size: 1.4rem;
+                padding: 6px 14px;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .log-entry {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .dev-list {
+                gap: 8px;
+            }
+            
+            .dev-item {
+                font-size: 0.8rem;
+                padding: 4px 8px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.3rem;
+                padding: 0 60px;
+            }
+            
+            .controls {
+                gap: 8px;
+            }
+            
+            .btn {
+                min-width: 90px;
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+            
+            .student-photo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .attendance-status {
+                font-size: 1.3rem;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="school-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>Bulakanon High School</h1>
+            <div class="subtitle">Advanced Attendance System</div>
+        </header>
+        
+        <div class="main-content">
+            <div class="scanner-section">
+                <h2 class="section-title"><i class="fas fa-qrcode"></i> QR Code Scanner</h2>
+                
+                <div class="scanner-container">
+                    <video id="scanner"></video>
+                    <div class="scanner-overlay">
+                        <div class="scanner-frame"></div>
+                    </div>
+                </div>
+                
+                <div id="scanResult" class="scan-result">Ready to scan student QR code</div>
+                
+                <div class="controls">
+                    <button id="startScanner" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button id="stopScanner" class="btn btn-danger" disabled>
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                    <button id="resetAll" class="btn btn-warning">
+                        <i class="fas fa-trash-alt"></i> Reset All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <div class="student-card">
+                    <div class="student-photo">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    
+                    <div class="student-info">
+                        <p><strong>Full Name:</strong> <span id="fullName">-</span></p>
+                        <p><strong>Grade:</strong> <span id="grade">-</span></p>
+                        <p><strong>Section:</strong> <span id="section">-</span></p>
+                        <p><strong>LRN:</strong> <span id="lrn">-</span></p>
+                        <p><strong>Phone:</strong> <span id="phone">-</span></p>
+                    </div>
+                    
+                    <div class="attendance-status status-none" id="status">
+                        Not Scanned
+                    </div>
+                </div>
+                
+                <div class="logs-section">
+                    <div class="logs-header">
+                        <h2 class="section-title"><i class="fas fa-clipboard-list"></i> Attendance Logs</h2>
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchLogs" placeholder="Search logs...">
+                        </div>
+                    </div>
+                    <div id="attendanceLogs" class="attendance-logs">
+                        <!-- Logs will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Bulakanon High School Attendance System | &copy; 2023 All Rights Reserved</p>
+            
+            <div class="developers">
+                <div class="dev-title">Developed By:</div>
+                <div class="dev-list">
+                    <div class="dev-item">
+                        <a href="#" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                            <span>Nelwyn M. Escodo</span>
+                        </a>
+                    </div>
+                    <div class="dev-item">
+                        <a href="#" target="_blank">
+                            <i class="fab fa-github"></i>
+                            <span>Algenren Alunan</span>
+                        </a>
+                    </div>
+                    <div class="dev-item">
+                        <a href="#" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                            <span>Reyjune Banais</span>
+                        </a>
+           
