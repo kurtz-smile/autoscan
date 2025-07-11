@@ -6,7 +6,7 @@
             "section": "Archimedes",
             "lrn": "123456789012",
             "phone": "09123456789",
-            "photo": "https://example.com/student1.jpg",
+            "photo": "storage/image.jpg",
             "attendance": []
         },
         {
