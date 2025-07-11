@@ -54,7 +54,7 @@
         header {
             background: linear-gradient(135deg, var(--dark-pink), var(--primary-pink));
             color: var(--light-text);
-            padding: 20px 15px;
+            padding: 15px;
             text-align: center;
             position: relative;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -65,8 +65,8 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             background: var(--light-text);
             border-radius: 50%;
             display: flex;
@@ -75,22 +75,44 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
         
+        .school-logo a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #f0f0f0;
+            text-decoration: none;
+            text-align: center;
+            line-height: 50px;
+            color: var(--primary-pink);
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
         .school-logo i {
-            font-size: 36px;
+            font-size: 24px;
             color: var(--primary-pink);
         }
         
         h1 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
             padding: 0 60px;
         }
         
         .subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.9;
             padding: 0 60px;
+        }
+        
+        .system-objective {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            padding: 0 10px;
+            font-style: italic;
+            opacity: 0.95;
         }
         
         .main-content {
@@ -431,20 +453,20 @@
             background: linear-gradient(135deg, var(--dark-pink), var(--primary-pink));
             color: white;
             text-align: center;
-            padding: 20px 15px;
+            padding: 15px;
             font-size: 0.85rem;
         }
         
         .developers {
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .dev-title {
             font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
         
         .dev-list {
@@ -452,7 +474,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            margin-top: 8px;
+            margin-top: 5px;
         }
         
         .dev-item {
@@ -510,27 +532,32 @@
             }
             
             header {
-                padding: 15px 10px;
+                padding: 12px 10px;
             }
             
             .school-logo {
-                width: 60px;
-                height: 60px;
+                width: 45px;
+                height: 45px;
                 left: 10px;
             }
             
-            .school-logo i {
-                font-size: 32px;
+            .school-logo a {
+                line-height: 45px;
+                font-size: 10px;
             }
             
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
                 padding: 0 50px;
             }
             
             .subtitle {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 padding: 0 50px;
+            }
+            
+            .system-objective {
+                font-size: 0.75rem;
             }
             
             .scanner-container {
@@ -579,7 +606,7 @@
         /* Desktop specific optimizations */
         @media (min-width: 992px) {
             body {
-                padding: 30px;
+                padding: 20px;
             }
             
             .container {
@@ -625,10 +652,11 @@
     <div class="container">
         <header>
             <div class="school-logo">
-                <i class="fas fa-graduation-cap"></i>
+                <a href="#" target="_blank">LOGO</a>
             </div>
             <h1>Bulakanon High School</h1>
             <div class="subtitle">Advanced Attendance System</div>
+            <div class="system-objective">Track student attendance with QR scanning technology</div>
         </header>
         
         <div class="main-content">
@@ -849,7 +877,7 @@
         // Process scanned QR code data
         async function processQRCode(qrData) {
             try {
-                // QR data format: "fullname:Nelwyn Escodo;grade:7;section:darwin;lrn:210987654321"
+                // QR data format: "fullname:Nelwyn Escodo;grade:7;section:darwin;lrn:210987654321;photo:https://example.com/photo.jpg"
                 const dataParts = qrData.split(';');
                 if (dataParts.length < 4) {
                     scanResultDiv.textContent = "Invalid QR code format. Please use a valid student QR code.";
@@ -883,6 +911,11 @@
                     scanResultDiv.textContent = "Student not found in database. Access denied.";
                     scanResultDiv.className = "scan-result result-error";
                     return;
+                }
+                
+                // Add photo URL from QR code if available
+                if (studentData.photo) {
+                    student.photoUrl = studentData.photo;
                 }
                 
                 // Update UI with student info
@@ -920,7 +953,10 @@
             }
             
             // Find student by LRN
-            return studentDatabase[fileName].find(student => student.lrn === lrn);
+            const foundStudent = studentDatabase[fileName].find(student => student.lrn === lrn);
+            
+            // Return a clone so we don't modify the original data
+            return foundStudent ? {...foundStudent} : null;
         }
 
         // Display student information
@@ -933,6 +969,14 @@
             phoneSpan.textContent = student.phone || '-';
             currentStudent = student;
             
+            // Update photo if available
+            const photoContainer = document.querySelector('.student-photo');
+            if (student.photoUrl) {
+                photoContainer.innerHTML = `<img src="${student.photoUrl}" alt="${student.fullName}">`;
+            } else {
+                photoContainer.innerHTML = `<i class="fas fa-user-graduate"></i>`;
+            }
+            
             // Remove active class after animation
             setTimeout(() => {
                 studentCard.classList.remove('active');
@@ -944,43 +988,35 @@
             const now = new Date();
             const today = now.toISOString().split('T')[0];
             
-            // Find today's attendance if it exists
-            let todayAttendance = student.attendance.find(a => a.date === today);
+            // Check if we have any logs for this student today
+            const studentLogsToday = attendanceLogsData.filter(log => 
+                log.lrn === student.lrn && log.date === today
+            );
             
-            if (!todayAttendance) {
-                // First scan of the day - mark as "In"
-                todayAttendance = {
-                    date: today,
-                    timeIn: now.toISOString(),
-                    timeOut: null,
-                    status: 'In'
-                };
-                student.attendance.push(todayAttendance);
-                
+            // Determine status based on logs
+            let status;
+            if (studentLogsToday.length === 0) {
+                // First scan today - mark IN
+                status = 'In';
                 statusSpan.textContent = 'IN';
                 statusSpan.className = 'attendance-status status-in';
                 scanResultDiv.textContent = "Attendance marked: IN";
-                scanResultDiv.className = "scan-result result-success";
-            } else if (todayAttendance.status === 'In') {
-                // Already in - mark as "Out"
-                todayAttendance.timeOut = now.toISOString();
-                todayAttendance.status = 'Out';
-                
-                statusSpan.textContent = 'OUT';
-                statusSpan.className = 'attendance-status status-out';
-                scanResultDiv.textContent = "Attendance marked: OUT";
                 scanResultDiv.className = "scan-result result-success";
             } else {
-                // Already out - toggle back to "In"
-                todayAttendance.timeIn = now.toISOString();
-                todayAttendance.timeOut = null;
-                todayAttendance.status = 'In';
+                // Toggle status based on last log
+                const lastStatus = studentLogsToday[0].status;
+                status = lastStatus === 'In' ? 'Out' : 'In';
                 
-                statusSpan.textContent = 'IN';
-                statusSpan.className = 'attendance-status status-in';
-                scanResultDiv.textContent = "Attendance marked: IN";
+                statusSpan.textContent = status.toUpperCase();
+                statusSpan.className = status === 'In' 
+                    ? 'attendance-status status-in' 
+                    : 'attendance-status status-out';
+                
+                scanResultDiv.textContent = `Attendance marked: ${status.toUpperCase()}`;
                 scanResultDiv.className = "scan-result result-success";
             }
+            
+            return status;
         }
 
         // Add attendance record to logs
@@ -989,7 +1025,8 @@
             const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const dateString = now.toISOString().split('T')[0];
             
-            const todayAttendance = student.attendance.find(a => a.date === dateString);
+            // Determine status for this log
+            const status = updateAttendanceStatus(student);
             
             const logEntry = {
                 id: Date.now(),
@@ -1000,7 +1037,7 @@
                 section: student.section,
                 lrn: student.lrn,
                 phone: student.phone,
-                status: todayAttendance.status
+                status: status
             };
             
             // Add to beginning of logs
@@ -1171,6 +1208,10 @@
                 sectionSpan.textContent = '-';
                 lrnSpan.textContent = '-';
                 phoneSpan.textContent = '-';
+                
+                // Reset photo to default
+                const photoContainer = document.querySelector('.student-photo');
+                photoContainer.innerHTML = `<i class="fas fa-user-graduate"></i>`;
                 
                 // Clear logs
                 attendanceLogs.innerHTML = '';
